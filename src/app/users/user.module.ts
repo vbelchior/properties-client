@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +37,7 @@ export const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
     HttpClientModule,
     MatAutocompleteModule,
     MatBadgeModule,

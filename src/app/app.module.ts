@@ -1,6 +1,7 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { NgModule, LOCALE_ID } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatNativeDateModule, DateAdapter } from '@angular/material/core';
@@ -31,6 +32,7 @@ export const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
+    FlexLayoutModule,
     FormsModule,
     MatSidenavModule,
     MatNativeDateModule,
