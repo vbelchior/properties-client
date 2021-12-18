@@ -39,6 +39,8 @@ export class UserEntity {
         this.insuranceCompanyId = json.insuranceCompanyId
           ? Number(json.insuranceCompanyId)
           : json.insuranceCompanyId;
+      if (keys.includes('extra'))
+        this.extra = json.extra ? Object(json.extra) : json.extra;
     }
   }
 }

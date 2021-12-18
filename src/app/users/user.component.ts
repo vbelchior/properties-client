@@ -3,6 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { AddressEntity, ViaCep } from '@commons/entities';
 import { HttpClient } from '@angular/common/http';
+import { TypeUtil } from '@commons/utils';
+import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * @title Card with multiple sections
@@ -42,7 +47,7 @@ import { HttpClient } from '@angular/common/http';
             </div>
             <mat-form-field appearance="outline" class="cpf">
               <mat-label>CPF</mat-label>
-              <input matInput formControlName="cpf" thNumber />
+              <input matInput formControlName="cpf" />
             </mat-form-field>
           </form>
         </mat-step>
@@ -57,7 +62,7 @@ import { HttpClient } from '@angular/common/http';
             >
               <mat-form-field fxFlex="20%" appearance="outline">
                 <mat-label>CEP</mat-label>
-                <input matInput formControlName="code" thCode />
+                <input matInput formControlName="code" mask="00000-000" />
               </mat-form-field>
               <mat-form-field fxFlex="40%" appearance="outline">
                 <mat-label>Rua</mat-label>
@@ -132,8 +137,7 @@ import { HttpClient } from '@angular/common/http';
   ],
 })
 export class UserComponent implements OnInit {
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  public userId: number;
 
   public userGroup: FormGroup;
 
@@ -143,7 +147,9 @@ export class UserComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {
     this.states = AddressEntity.states;
   }
@@ -176,11 +182,13 @@ export class UserComponent implements OnInit {
             name: group.name,
             phone: group.phone,
             email: group.email,
-            cpf: group.cpf,
+            extra: { CPF: group.cpf },
           };
         })
       )
-      .subscribe();
+      .subscribe((json: object) => {
+        this.save(json);
+      });
     this.addressGroup.valueChanges
       .pipe(
         debounceTime(1000),
@@ -198,10 +206,29 @@ export class UserComponent implements OnInit {
           };
         })
       )
-      .subscribe();
+      .subscribe((json: object) => {
+        const code: string = json['code'];
+        if (code.length == 8) this.searchByCep(json['code']);
+      });
+  }
+  private async save(partial: any): Promise<void> {
+    const save$: Observable<any> = this.userId
+      ? this.userService.update(this.userId, new UserEntity(partial))
+      : this.userService.create(new UserEntity(partial));
+    return save$
+      .toPromise()
+      .then((user: UserEntity) => {
+        if (TypeUtil.exists(user.id)) {
+          this.userId = user.id;
+        }
+        return Promise.resolve();
+      })
+      .catch((error) => {
+        this.snackBar.open(error.error.message, null);
+      });
   }
 
-  private searchByCpf(code: string): void {
+  private searchByCep(code: string): void {
     const path: string = `https://viacep.com.br/ws/${code}/json`;
     this.httpClient.get<ViaCep>(path).subscribe((json: ViaCep) => {
       this.addressGroup.patchValue({

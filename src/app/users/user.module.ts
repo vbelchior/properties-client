@@ -17,13 +17,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
-
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule, Routes } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
 
 import { UserComponent } from './user.component';
+import { UserService } from './user.service';
+
+const maskConfig: Partial<IConfig> = {
+  validation: false,
+};
 
 export const routes: Routes = [
   {
@@ -57,8 +62,9 @@ export const routes: Routes = [
     MatSortModule,
     MatStepperModule,
     ReactiveFormsModule,
+    NgxMaskModule.forRoot(maskConfig),
     RouterModule.forChild(routes),
   ],
-  providers: [],
+  providers: [UserService],
 })
 export class UserModule {}

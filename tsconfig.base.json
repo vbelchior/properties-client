@@ -16,7 +16,7 @@
 		"module": "commonjs",
 		"paths": {
       "@commons/*": ["src/commons/*"],
-			"@environments/*": ["src/environments/*"],
+			"@environments/*": ["src/commons/environments/*"],
 		},
 		"lib": ["es2018", "dom"],
     "forceConsistentCasingInFileNames": true
