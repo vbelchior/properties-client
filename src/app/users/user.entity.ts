@@ -1,4 +1,4 @@
-import { AddressEntity } from '@commons/entites';
+import { AddressEntity } from '../../commons/entities';
 
 export class UserEntity {
   public id: number;
@@ -13,7 +13,11 @@ export class UserEntity {
 
   public address: AddressEntity;
 
+  public insuranceCompanyId: number;
+
   public extra: object;
+
+  public features: object[];
 
   constructor(json?: any) {
     if (json != undefined && json != null) {
@@ -27,6 +31,14 @@ export class UserEntity {
         this.secret = json.secret ? String(json.secret) : json.secret;
       if (keys.includes('phone'))
         this.phone = json.phone ? Number(json.phone) : json.phone;
+      if (keys.includes('address'))
+        this.address = json.address
+          ? new AddressEntity(json.address)
+          : json.address;
+      if (keys.includes('insuranceCompanyId'))
+        this.insuranceCompanyId = json.insuranceCompanyId
+          ? Number(json.insuranceCompanyId)
+          : json.insuranceCompanyId;
     }
   }
 }

@@ -1,5 +1,18 @@
 import { TypeUtil } from '../utils';
 
+export interface ViaCep {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+}
+
 export class AddressEntity {
   public id: number;
 
@@ -15,9 +28,9 @@ export class AddressEntity {
 
   public country: string;
 
-  public quarter: string;
+  public quarter?: string;
 
-  public extra: string;
+  public extra?: string;
 
   constructor(json?: any) {
     if (TypeUtil.exists(json)) {
@@ -32,4 +45,34 @@ export class AddressEntity {
       if (TypeUtil.exists(json.country)) this.country = String(json.country);
     }
   }
+
+  public static states = [
+    'AC',
+    'AL',
+    'AP',
+    'AM',
+    'BA',
+    'CE',
+    'DF',
+    'ES',
+    'GO',
+    'MA',
+    'MT',
+    'MS',
+    'MG',
+    'PA',
+    'PB',
+    'PR',
+    'PE',
+    'PI',
+    'RJ',
+    'RN',
+    'RS',
+    'RO',
+    'RR',
+    'SC',
+    'SP',
+    'SE',
+    'TO',
+  ];
 }
