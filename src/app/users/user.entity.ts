@@ -1,5 +1,17 @@
 import { AddressEntity } from '../../commons/entities/address';
 
+export const FEATURE_CLIENT_DEFAULT: object = {
+  code: 'CLIENT',
+  title: 'Cliente',
+  date: new Date(),
+};
+
+export const FEATURE_THIRD_DEFAULT: object = {
+  code: 'THIRD',
+  title: 'Terceiro',
+  date: new Date(),
+};
+
 export class UserEntity {
   public id: number;
 
@@ -17,7 +29,7 @@ export class UserEntity {
 
   public extra: object;
 
-  public features: object[];
+  public features: object;
 
   constructor(json?: any) {
     if (json != undefined && json != null) {
@@ -41,6 +53,8 @@ export class UserEntity {
           : json.insuranceCompanyId;
       if (keys.includes('extra'))
         this.extra = json.extra ? Object(json.extra) : json.extra;
+      if (keys.includes('features'))
+        this.features = json.features ? Object(json.features) : json.features;
     }
   }
 }

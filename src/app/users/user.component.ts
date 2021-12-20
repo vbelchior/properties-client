@@ -4,7 +4,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { AddressEntity, ViaCep } from '@commons/entities/address';
 import { HttpClient } from '@angular/common/http';
 import { TypeUtil } from '@commons/utils';
-import { UserEntity } from './user.entity';
+import { UserEntity, FEATURE_CLIENT_DEFAULT } from './user.entity';
 import { UserService } from './user.service';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -163,8 +163,8 @@ export class UserComponent implements OnInit {
       name: ['', Validators.required],
       phone: ['', (Validators.pattern('[- +()0-9]+'), Validators.required)],
       email: ['', [Validators.email]],
-      cpf: ['', Validators.required],
-      features: [''],
+      cpf: ['', (Validators.pattern('[- +()0-9]+'), Validators.required)],
+      //features: [''],
     });
 
     this.addressGroup = this.formBuilder.group({
@@ -187,7 +187,6 @@ export class UserComponent implements OnInit {
             phone: group.phone,
             email: group.email,
             extra: { CPF: group.cpf },
-            addressId: TypeUtil.exists(this.addressId) ? this.addressId : -1,
           };
         })
       )
@@ -238,16 +237,20 @@ export class UserComponent implements OnInit {
       .then((address: AddressEntity) => {
         if (TypeUtil.exists(address.id)) {
           this.addressId = address.id;
-          this.userGroup.markAllAsTouched();
         }
+        this.userGroup.updateValueAndValidity();
         return Promise.resolve();
       })
       .catch((error) => {
-        this.snackBar.open(error.error.message, null);
+        this.snackBar.open(error);
       });
   }
 
   private async saveUser(partial: any): Promise<void> {
+    partial['addressId'] = this.addressId;
+    partial['insuranceCompanyId'] = 0;
+    partial['secret'] = 'segredo';
+    partial['features'] = FEATURE_CLIENT_DEFAULT;
     const save$: Observable<any> = this.userId
       ? this.userService.update(this.userId, new UserEntity(partial))
       : this.userService.create(new UserEntity(partial));
@@ -269,7 +272,6 @@ export class UserComponent implements OnInit {
     this.httpClient.get<ViaCep>(path).subscribe((json: ViaCep) => {
       this.addressGroup.patchValue({
         street: json.logradouro,
-        extra: json.complemento,
         quarter: json.bairro,
         city: json.localidade,
         state: json.uf,
