@@ -1,4 +1,4 @@
-import { TypeUtil } from '../utils';
+import { TypeUtil } from '../../utils';
 
 export interface ViaCep {
   cep: string;

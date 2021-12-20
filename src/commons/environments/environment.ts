@@ -2,5 +2,5 @@ export const environment = {
   production: false,
   platform: 'browser',
   client: 'http://localhost:4200',
-  server: '/rest',
+  server: 'http://localhost:3000',
 };

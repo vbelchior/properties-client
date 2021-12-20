@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { AddressEntity, ViaCep } from '@commons/entities';
+import { AddressEntity, ViaCep } from '@commons/entities/address';
 import { HttpClient } from '@angular/common/http';
 import { TypeUtil } from '@commons/utils';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddressService } from '@commons/entities/address/address.service';
 
 /**
  * @title Card with multiple sections
@@ -139,6 +140,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UserComponent implements OnInit {
   public userId: number;
 
+  public addressId: number;
+
   public userGroup: FormGroup;
 
   public addressGroup: FormGroup;
@@ -149,6 +152,7 @@ export class UserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private httpClient: HttpClient,
     private snackBar: MatSnackBar,
+    private addressService: AddressService,
     private userService: UserService
   ) {
     this.states = AddressEntity.states;
@@ -169,7 +173,7 @@ export class UserComponent implements OnInit {
       number: ['', [Validators.required]],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      country: ['Brasil', Validators.required],
+      country: ['Brasil'],
       quarter: [''],
       extra: [''],
     });
@@ -183,16 +187,29 @@ export class UserComponent implements OnInit {
             phone: group.phone,
             email: group.email,
             extra: { CPF: group.cpf },
+            addressId: TypeUtil.exists(this.addressId) ? this.addressId : -1,
           };
         })
       )
       .subscribe((json: object) => {
-        this.save(json);
+        if (this.userGroup.valid && TypeUtil.hasText(this.addressId)) {
+          this.saveUser(json);
+        }
       });
     this.addressGroup.valueChanges
       .pipe(
         debounceTime(1000),
-        distinctUntilChanged(),
+        distinctUntilChanged(
+          (prev, curr) =>
+            prev.code === curr.code &&
+            prev.street === curr.street &&
+            prev.city === curr.city &&
+            prev.state === curr.state &&
+            prev.country === curr.country &&
+            prev.number === curr.number &&
+            prev.quarter === curr.quarter &&
+            prev.extra === curr.extra
+        ),
         map((group) => {
           return {
             code: group.code,
@@ -209,9 +226,28 @@ export class UserComponent implements OnInit {
       .subscribe((json: object) => {
         const code: string = json['code'];
         if (code.length == 8) this.searchByCep(json['code']);
+        if (this.addressGroup.valid) this.saveAddress(json);
       });
   }
-  private async save(partial: any): Promise<void> {
+  private async saveAddress(partial: any): Promise<void> {
+    const save$: Observable<any> = this.addressId
+      ? this.addressService.update(this.addressId, new AddressEntity(partial))
+      : this.addressService.create(new AddressEntity(partial));
+    return save$
+      .toPromise()
+      .then((address: AddressEntity) => {
+        if (TypeUtil.exists(address.id)) {
+          this.addressId = address.id;
+          this.userGroup.markAllAsTouched();
+        }
+        return Promise.resolve();
+      })
+      .catch((error) => {
+        this.snackBar.open(error.error.message, null);
+      });
+  }
+
+  private async saveUser(partial: any): Promise<void> {
     const save$: Observable<any> = this.userId
       ? this.userService.update(this.userId, new UserEntity(partial))
       : this.userService.create(new UserEntity(partial));
@@ -234,7 +270,7 @@ export class UserComponent implements OnInit {
       this.addressGroup.patchValue({
         street: json.logradouro,
         extra: json.complemento,
-        area: json.bairro,
+        quarter: json.bairro,
         city: json.localidade,
         state: json.uf,
       });

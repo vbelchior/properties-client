@@ -10,7 +10,6 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
 
   public create(entity: UserEntity): Observable<UserEntity> {
-    console.debug(entity);
     const path: string = `${environment.server}/users`;
     return this.httpClient.post<UserEntity>(path, entity);
   }

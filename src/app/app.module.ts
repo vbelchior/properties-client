@@ -13,6 +13,7 @@ import { InterceptorModule } from '@commons/interceptors/interceptor.module';
 
 import { environment } from '@commons/environments';
 import { AppComponent } from './app.component';
+import { AddressModule } from '@commons/entities/address';
 import { BinaryModule } from '../app/binaries/binary.module';
 import { PropertyModule } from '../app/properties/property.module';
 import { UserModule } from '../app/users/user.module';
@@ -39,6 +40,7 @@ export const routes: Routes = [
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    AddressModule,
     BinaryModule,
     PropertyModule,
     UserModule,
