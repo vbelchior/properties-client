@@ -13,9 +13,10 @@ import { InterceptorModule } from '@commons/interceptors/interceptor.module';
 
 import { environment } from '@commons/environments';
 import { AppComponent } from './app.component';
+import { AccountModule } from '../app/account/account.module';
 import { AddressModule } from '@commons/entities/address';
-import { BinaryModule } from '../app/binaries/binary.module';
-import { PropertyModule } from '../app/properties/property.module';
+import { HomeModule } from '../app/home/home.module';
+import { VehicleModule } from '../app/vehicles/vehicle.module';
 import { UserModule } from '../app/users/user.module';
 
 registerLocaleData(localePt); // FIXME: set this dynamically
@@ -23,7 +24,7 @@ registerLocaleData(localePt); // FIXME: set this dynamically
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'user',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
 ];
@@ -40,9 +41,10 @@ export const routes: Routes = [
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    AccountModule,
     AddressModule,
-    BinaryModule,
-    PropertyModule,
+    HomeModule,
+    VehicleModule,
     UserModule,
     InterceptorModule.forRoot({ serverUrl: environment.server }),
     RouterModule.forRoot(routes),

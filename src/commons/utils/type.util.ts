@@ -7,4 +7,7 @@ export class TypeUtil {
   public static hasText(value: any) {
     return TypeUtil.exists(value) && value !== '';
   }
+  public static isFullArray(value: any[]): boolean {
+    return value !== null && value !== undefined && value.length > 0;
+  }
 }

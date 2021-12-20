@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -23,9 +24,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 
-import { UserComponent } from './user.component';
-import { LoginComponent } from '../account/login.component';
-import { UserService } from './user.service';
+import { VehicleService } from './vehicle.service';
+import { VehicleComponent } from './vehicle.component';
+import { VehiclesComponent } from './vehicles.component';
+import { VehicleResolver } from './vehicle.resolver';
+import { VehiclesResolver } from './vehicles.resolver';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -33,17 +36,19 @@ const maskConfig: Partial<IConfig> = {
 
 export const routes: Routes = [
   {
-    path: 'users',
-    component: UserComponent,
+    path: 'vehicles',
+    component: VehiclesComponent,
+    resolve: { vehicles: VehiclesResolver },
   },
   {
-    path: 'login',
-    component: LoginComponent,
+    path: 'vehicles/:id',
+    component: VehicleComponent,
+    resolve: { vehicle: VehicleResolver },
   },
 ];
 
 @NgModule({
-  declarations: [UserComponent, LoginComponent],
+  declarations: [VehicleComponent, VehiclesComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -59,6 +64,7 @@ export const routes: Routes = [
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatMenuModule,
     MatTableModule,
     MatProgressSpinnerModule,
@@ -70,6 +76,6 @@ export const routes: Routes = [
     NgxMaskModule.forRoot(maskConfig),
     RouterModule.forChild(routes),
   ],
-  providers: [UserService],
+  providers: [VehicleService],
 })
-export class UserModule {}
+export class VehicleModule {}

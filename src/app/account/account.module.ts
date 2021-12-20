@@ -1,53 +1,43 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { IConfig, NgxMaskModule } from 'ngx-mask';
 
-import { UserComponent } from './user.component';
-import { LoginComponent } from '../account/login.component';
-import { UserService } from './user.service';
+import { LoginComponent } from './login.component';
+import { AccountService } from './account.service';
 
-const maskConfig: Partial<IConfig> = {
-  validation: false,
-};
-
-export const routes: Routes = [
-  {
-    path: 'users',
-    component: UserComponent,
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-];
+export const routes: Routes = [{ path: 'login', component: LoginComponent }];
 
 @NgModule({
-  declarations: [UserComponent, LoginComponent],
+  declarations: [],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
-    FormsModule,
     FlexLayoutModule,
+    FormsModule,
     HttpClientModule,
     MatAutocompleteModule,
     MatBadgeModule,
@@ -59,17 +49,18 @@ export const routes: Routes = [
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatMenuModule,
+    MatProgressBarModule,
     MatTableModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
-    MatStepperModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot(maskConfig),
     RouterModule.forChild(routes),
   ],
-  providers: [UserService],
+  providers: [AccountService],
+  exports: [],
 })
-export class UserModule {}
+export class AccountModule {}

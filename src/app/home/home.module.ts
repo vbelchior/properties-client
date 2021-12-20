@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,26 +16,32 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule, Routes } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
 
-import { PropertyService } from './property.service';
-import { PropertyComponent } from './property.component';
+import { HomeComponent } from './home.component';
+
+const maskConfig: Partial<IConfig> = {
+  validation: false,
+};
 
 export const routes: Routes = [
   {
-    path: 'property',
-    component: PropertyComponent,
+    path: 'home',
+    component: HomeComponent,
   },
 ];
 
 @NgModule({
-  declarations: [PropertyComponent],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
     HttpClientModule,
     MatAutocompleteModule,
     MatBadgeModule,
@@ -52,9 +59,11 @@ export const routes: Routes = [
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
+    MatStepperModule,
     ReactiveFormsModule,
+    NgxMaskModule.forRoot(maskConfig),
     RouterModule.forChild(routes),
   ],
-  providers: [PropertyService],
+  providers: [],
 })
-export class PropertyModule {}
+export class HomeModule {}
