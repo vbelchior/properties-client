@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit {
   public ngOnInit() {}
 
   public onNavigateUsers(): void {
-    this.router.navigate(['user']);
+    this.router.navigate(['users']);
   }
 
   public onNavigateVehicles(): void {
